@@ -230,6 +230,7 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
     /**
      * Create a new {@link Channel} and bind it.
      */
+    //绑定端口
     public ChannelFuture bind(int inetPort) {
         return bind(new InetSocketAddress(inetPort));
     }
@@ -266,6 +267,7 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
         if (regFuture.isDone()) {
             // At this point we know that the registration was complete and successful.
             ChannelPromise promise = channel.newPromise();
+            // 这里会设置SelectionKey的感兴趣操作accept
             doBind0(regFuture, channel, localAddress, promise);
             return promise;
         } else {
@@ -295,6 +297,7 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
     final ChannelFuture initAndRegister() {
         Channel channel = null;
         try {
+            //创建channel，例如NioServerSocketChannel
             channel = channelFactory.newChannel();
             init(channel);
         } catch (Throwable t) {

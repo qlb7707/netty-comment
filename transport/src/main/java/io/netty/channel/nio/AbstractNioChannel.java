@@ -79,6 +79,7 @@ public abstract class AbstractNioChannel extends AbstractChannel {
     protected AbstractNioChannel(Channel parent, SelectableChannel ch, int readInterestOp) {
         super(parent);
         this.ch = ch;
+        //readInterestOp设为accept
         this.readInterestOp = readInterestOp;
         try {
             ch.configureBlocking(false);
@@ -377,12 +378,14 @@ public abstract class AbstractNioChannel extends AbstractChannel {
         boolean selected = false;
         for (;;) {
             try {
+                //注册channel到selector，没有设置感谢兴趣事件
                 selectionKey = javaChannel().register(eventLoop().unwrappedSelector(), 0, this);
                 return;
             } catch (CancelledKeyException e) {
                 if (!selected) {
                     // Force the Selector to select now as the "canceled" SelectionKey may still be
                     // cached and not removed because no Select.select(..) operation was called yet.
+                    //强制select一次，清空被cancel的SelectionKey
                     eventLoop().selectNow();
                     selected = true;
                 } else {
