@@ -913,7 +913,7 @@ abstract class AbstractChannelHandlerContext implements ChannelHandlerContext, R
         }
         return false;
     }
-
+    //用来找到下一个inbound context，实现handler的传播
     private AbstractChannelHandlerContext findContextInbound(int mask) {
         AbstractChannelHandlerContext ctx = this;
         do {
