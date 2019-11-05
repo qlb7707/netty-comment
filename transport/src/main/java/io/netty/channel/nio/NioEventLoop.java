@@ -628,7 +628,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
             // null out entry in the array to allow to have it GC'ed once the Channel close
             // See https://github.com/netty/netty/issues/2363
             selectedKeys.keys[i] = null;
-
+            //我们在注册selector的时候吧channel作为attachment， 这里获取这个attachment
             final Object a = k.attachment();
 
             if (a instanceof AbstractNioChannel) {
@@ -795,7 +795,8 @@ public final class NioEventLoop extends SingleThreadEventLoop {
             int selectCnt = 0;
             long currentTimeNanos = System.nanoTime();
             long selectDeadLineNanos = currentTimeNanos + delayNanos(currentTimeNanos);
-
+            // current + deadline - (current - START) -START = deadline
+            // 或者 current + 1s - START
             long normalizedDeadlineNanos = selectDeadLineNanos - initialNanoTime();
             if (nextWakeupTime != normalizedDeadlineNanos) {
                 nextWakeupTime = normalizedDeadlineNanos;
